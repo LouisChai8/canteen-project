@@ -10,18 +10,22 @@
 
 <body class="bg-[#f8f6f6] text-slate-800 font-sans flex flex-col min-h-screen">
 
-    <!-- Top Navbar Header -->
+    <!-- Header -->
     <header
-        class="bg-gradient-to-r from-[#56021F] via-[#59142b] to-[#D17D98] text-white px-8 py-3 flex items-center justify-between sticky top-0 z-50 shadow-md">
+        class="relative bg-gradient-to-r from-[#56021F] via-[#59142b] to-[#D17D98] text-white px-8 py-3 flex items-center justify-between sticky top-0 z-50 shadow-md">
+        
+        <!-- Logo SEMAT-->
         <a href="{{ route('catalog') }}" class="text-xl font-bold tracking-wider">SEMAT</a>
 
-        <nav class="hidden md:flex items-center gap-8 text-sm font-medium">
+        <!-- Nav Katalo, Pesanan saya, Pembayaran, Riwayat -->
+        <nav class="hidden md:flex items-center gap-8 text-sm font-medium absolute left-1/2 -translate-x-1/2">
             <a href="{{ route('catalog') }}" class="hover:text-pink-200 transition">Katalog</a>
             <a href="{{ route('orders') }}" class="hover:text-pink-200 transition">Pesanan Saya</a>
             <a href="{{ route('checkout') }}" class="hover:text-pink-200 transition">Pembayaran</a>
-            <a href="#" class="hover:text-pink-200 transition">History</a>
+            <a href="#" class="hover:text-pink-200 transition">Riwayat</a>
         </nav>
 
+        <!-- Profile n Cart -->
         <div class="flex items-center gap-3">
             <a href="{{ route('checkout') }}"
                 class="bg-white text-[#59142b] hover:bg-slate-100 font-semibold text-xs px-4 py-2 rounded-full shadow transition">

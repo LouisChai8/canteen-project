@@ -3,9 +3,9 @@
 @section('content')
 <div class="space-y-8">
 
-    <!-- Header & Search -->
+    <!-- Header n Search -->
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <h2 class="text-2xl font-bold text-[#59142b]">Today's Hottest Seller</h2>
+        <h2 class="text-2xl font-bold text-[#59142b]">Penjualan Terlaris Hari Ini</h2>
 
         <div class="relative w-full md:w-80">
             <input type="text" placeholder="Cari Menu...."
@@ -18,7 +18,7 @@
         </div>
     </div>
 
-    <!-- Today's Hottest Seller Section -->
+    <!-- Today's Hottest Seller -->
     <div class="space-y-4">
         <!-- Filter Tabs -->
         <div class="flex items-center gap-2">
@@ -52,7 +52,7 @@
 
             <!-- Item 2 -->
             <div class="relative bg-white border border-slate-300 rounded-3xl p-2.5 flex flex-col justify-between shadow-sm overflow-hidden">
-                <span class="absolute top-0 left-0 bg-[#59142b] text-white text-[10px] px-3 py-1 rounded-tl-[22px] rounded-br-xl font-semibold z-10">BEST SELLER</span>
+                <span class="absolute top-0 left-0 bg-[#59142b] text-white text-[10px] px-3 py-1 rounded-tl-[22px] rounded-br-xl font-semibold z-10">Cemilan</span>
                 <div>
                     <div class="h-32 w-full rounded-2xl overflow-hidden bg-slate-100 mb-3">
                         <img src="{{ asset('images/Fries.png') }}" alt="Kentang Goreng" class="w-full h-full object-cover">
@@ -129,18 +129,18 @@
         </div>
     </div>
 
-    <!-- Promo Banner with Navigation Buttons -->
+    <!-- Banner -->
     <div class="rounded-3xl overflow-hidden shadow-sm relative h-44 md:h-52 bg-white group">
         <img src="{{ asset('images/Banner.png') }}" alt="Promo Banner" class="w-full h-full object-cover object-left">
 
-        <!-- Banner Prev Button -->
+        <!-- Banner prev banner -->
         <button class="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/20 hover:bg-black/40 backdrop-blur-sm text-white flex items-center justify-center transition">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
             </svg>
         </button>
 
-        <!-- Banner Next Button -->
+        <!-- Button next banner -->
         <button class="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/20 hover:bg-black/40 backdrop-blur-sm text-white flex items-center justify-center transition">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
@@ -148,7 +148,7 @@
         </button>
     </div>
 
-    <!-- Main Catalog Section -->
+    <!-- Main Catalog  -->
     <div class="space-y-4">
         <h2 class="text-2xl font-bold text-[#59142b]">Menu Katalog</h2>
 
@@ -163,7 +163,7 @@
         <!-- Catalog Grid -->
         <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
 
-            <!-- Catalog Item 1 -->
+            <!-- Item 1 -->
             <div class="relative bg-white border border-slate-300 rounded-3xl p-2.5 flex flex-col justify-between shadow-sm overflow-hidden">
                 <span class="absolute top-0 left-0 bg-[#59142b] text-white text-[10px] px-3 py-1 rounded-tl-[22px] rounded-br-xl font-semibold z-10">Makanan</span>
                 <div>
@@ -182,7 +182,7 @@
                 </div>
             </div>
 
-            <!-- Catalog Item 2 -->
+            <!-- Item 2 -->
             <div class="relative bg-white border border-slate-300 rounded-3xl p-2.5 flex flex-col justify-between shadow-sm overflow-hidden">
                 <span class="absolute top-0 left-0 bg-[#59142b] text-white text-[10px] px-3 py-1 rounded-tl-[22px] rounded-br-xl font-semibold z-10">Minuman</span>
                 <div>
@@ -201,7 +201,7 @@
                 </div>
             </div>
 
-            <!-- Catalog Item 3 -->
+            <!-- Item 3 -->
             <div class="relative bg-white border border-slate-300 rounded-3xl p-2.5 flex flex-col justify-between shadow-sm overflow-hidden">
                 <span class="absolute top-0 left-0 bg-[#59142b] text-white text-[10px] px-3 py-1 rounded-tl-[22px] rounded-br-xl font-semibold z-10">Cemilan</span>
                 <div>
@@ -220,7 +220,7 @@
                 </div>
             </div>
 
-            <!-- Catalog Item 4 -->
+            <!-- Item 4 -->
             <div class="relative bg-white border border-slate-300 rounded-3xl p-2.5 flex flex-col justify-between shadow-sm overflow-hidden">
                 <span class="absolute top-0 left-0 bg-[#59142b] text-white text-[10px] px-3 py-1 rounded-tl-[22px] rounded-br-xl font-semibold z-10">Minuman</span>
                 <div>
@@ -239,7 +239,7 @@
                 </div>
             </div>
 
-            <!-- Catalog Item 5 -->
+            <!-- Item 5 -->
             <div class="relative bg-white border border-slate-300 rounded-3xl p-2.5 flex flex-col justify-between shadow-sm overflow-hidden">
                 <span class="absolute top-0 left-0 bg-[#59142b] text-white text-[10px] px-3 py-1 rounded-tl-[22px] rounded-br-xl font-semibold z-10">Minuman</span>
                 <div>
@@ -258,7 +258,7 @@
                 </div>
             </div>
 
-            <!-- Catalog Item 6 -->
+            <!-- Item 6 -->
             <div class="relative bg-white border border-slate-300 rounded-3xl p-2.5 flex flex-col justify-between shadow-sm overflow-hidden">
                 <span class="absolute top-0 left-0 bg-[#59142b] text-white text-[10px] px-3 py-1 rounded-tl-[22px] rounded-br-xl font-semibold z-10">Makanan</span>
                 <div>
@@ -277,7 +277,7 @@
                 </div>
             </div>
 
-            <!-- Catalog Item 7 -->
+            <!-- Item 7 -->
             <div class="relative bg-white border border-slate-300 rounded-3xl p-2.5 flex flex-col justify-between shadow-sm overflow-hidden">
                 <span class="absolute top-0 left-0 bg-[#59142b] text-white text-[10px] px-3 py-1 rounded-tl-[22px] rounded-br-xl font-semibold z-10">Makanan</span>
                 <div>
@@ -296,7 +296,7 @@
                 </div>
             </div>
 
-            <!-- Catalog Item 8 -->
+            <!-- Item 8 -->
             <div class="relative bg-white border border-slate-300 rounded-3xl p-2.5 flex flex-col justify-between shadow-sm overflow-hidden">
                 <span class="absolute top-0 left-0 bg-[#59142b] text-white text-[10px] px-3 py-1 rounded-tl-[22px] rounded-br-xl font-semibold z-10">Cemilan</span>
                 <div>
@@ -315,7 +315,7 @@
                 </div>
             </div>
 
-            <!-- Catalog Item 9 -->
+            <!-- Item 9 -->
             <div class="relative bg-white border border-slate-300 rounded-3xl p-2.5 flex flex-col justify-between shadow-sm overflow-hidden">
                 <span class="absolute top-0 left-0 bg-[#59142b] text-white text-[10px] px-3 py-1 rounded-tl-[22px] rounded-br-xl font-semibold z-10">Makanan</span>
                 <div>
@@ -334,7 +334,7 @@
                 </div>
             </div>
 
-            <!-- Catalog Item 10 -->
+            <!-- Item 10 -->
             <div class="relative bg-white border border-slate-300 rounded-3xl p-2.5 flex flex-col justify-between shadow-sm overflow-hidden">
                 <span class="absolute top-0 left-0 bg-[#59142b] text-white text-[10px] px-3 py-1 rounded-tl-[22px] rounded-br-xl font-semibold z-10">Makanan</span>
                 <div>
