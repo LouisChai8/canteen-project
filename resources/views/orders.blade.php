@@ -5,7 +5,7 @@
 
     <!-- Flash Alert Status (Menggunakan Session Flash Laravel) -->
     @if(session('success'))
-        <x-alert type="success" class="mb-4 bg-emerald-100 border border-emerald-300 text-emerald-800 text-xs p-4 rounded-2xl flex items-center justify-between">
+        <x-alert class="mb-4 bg-emerald-100 border border-emerald-300 text-emerald-800 text-xs p-4 rounded-2xl flex items-center justify-between">
             <div class="flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -32,7 +32,7 @@
     <!-- Active Orders Container -->
     <div id="activeOrdersList" class="space-y-4">
 
-        <!-- Sample Order Card 1: Sedang Diproses (Dengang Estimasi Waktu) -->
+        <!-- Sample Order Card 1: Sedang Diproses -->
         <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm space-y-4">
             <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                 <div>
@@ -47,10 +47,12 @@
                         </svg>
                         Estimasi Pengambilan: <span class="font-bold text-amber-800">9:10</span>
                     </span>
-                    <span class="bg-amber-100 text-amber-800 text-[11px] font-bold px-3 py-1 rounded-full flex items-center gap-1.5">
+
+                    <!-- Status: Sedang Diproses (Menggunakan Alert Component) -->
+                    <x-alert class="!p-0 !py-1 !px-3 bg-amber-100 border border-amber-200 text-amber-800 text-[11px] font-bold !rounded-full gap-1.5">
                         <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
-                        Sedang Diproses
-                    </span>
+                        <span>Sedang Diproses</span>
+                    </x-alert>
                 </div>
             </div>
 
@@ -106,10 +108,12 @@
                     <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">ID Pesanan</span>
                     <span class="text-xs font-extrabold text-slate-800">#ORD-20260910-02</span>
                 </div>
-                <span class="bg-emerald-100 text-emerald-800 text-[11px] font-bold px-3 py-1 rounded-full flex items-center gap-1.5">
+
+                <!-- Status: Siap Diambil (Menggunakan Alert Component) -->
+                <x-alert class="!p-0 !py-1 !px-3 bg-emerald-100 border border-emerald-200 text-emerald-800 text-[11px] font-bold !rounded-full gap-1.5">
                     <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                    Siap Diambil
-                </span>
+                    <span>Siap Diambil</span>
+                </x-alert>
             </div>
 
             <!-- Items -->
@@ -127,7 +131,7 @@
                 </div>
             </div>
 
-            <!-- Total & Action Form Laravel (Tanpa JS/Alpine) -->
+            <!-- Total & Action Form Laravel -->
             <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
                 <div>
                     <span class="text-[10px] text-slate-400 uppercase block font-semibold">Total Pembayaran</span>

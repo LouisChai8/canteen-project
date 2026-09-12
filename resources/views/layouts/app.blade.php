@@ -22,7 +22,7 @@
             <a href="{{ route('catalog') }}" class="hover:text-pink-200 transition">Katalog</a>
             <a href="{{ route('orders') }}" class="hover:text-pink-200 transition">Pesanan Saya</a>
             <a href="{{ route('checkout') }}" class="hover:text-pink-200 transition">Pembayaran</a>
-            <a href="#" class="hover:text-pink-200 transition">Riwayat</a>
+            <a href="{{ route('history') }}" class="hover:text-pink-200 transition">Riwayat</a>
         </nav>
 
         <!-- Profile n Cart -->
