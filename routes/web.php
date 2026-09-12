@@ -5,7 +5,7 @@ use App\Http\Controllers\OrderController;
 
 // Katalog / Homepage
 Route::get('/', function () {
-    return view('catalog');
+    return view('user.catalog');
 })->name('catalog');
 
 // Group Route Pesanan via OrderController

@@ -8,12 +8,12 @@ class OrderController extends Controller
 {
     public function index()
     {
-        return view('orders');
+        return view('user.orders');
     }
 
     public function checkout()
     {
-        return view('checkout');
+        return view('user.checkout');
     }
 
     public function history()
@@ -58,6 +58,6 @@ class OrderController extends Controller
             ],
         ];
 
-        return view('history', compact('histories'));
+        return view('user.history', compact('histories'));
     }
 }
