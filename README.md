@@ -1,33 +1,39 @@
 # 🛒 SEMAT - Sistem Edukasi & Makanan Terpadu
 
-SEMAT adalah aplikasi manajemen pemesanan makanan kantin berbasis web yang dirancang untuk mempermudah transaksi antara siswa dan penjual kantin di lingkungan sekolah.
+SEMAT adalah aplikasi manajemen pemesanan makanan kantin berbasis web yang dirancang untuk mempermudah transaksi, pemantauan pesanan, dan rekapitulasi penjualan antara siswa dan penjual kantin secara efisien dan terorganisir.
 
 ---
 
-## 🚀 Fitur Utama
+## 📝 Deskripsi Aplikasi
 
-- **Dashboard Penjual:** Ringkasan statistik harian (total pesanan & total pendapatan).
-- **Grafik Penjualan:** Visualisasi tren penjualan harian menggunakan Chart.js.
-- **Manajemen Pesanan:** 
-  - Monitoring daftar pesanan terbaru secara real-time.
-  - Pop-up modal *Daftar Semua Pesanan* untuk melihat riwayat transaksi lengkap.
-- **Sistem Status Pesanan:** Indicator badge status (*Diproses*, *Siap*, *Selesai*).
+Aplikasi **SEMAT** dibangun untuk mengatasi antrean dan ketidakteraturan pemesanan makanan di kantin sekolah. Dengan antarmuka yang responsif dan intuitif, penjual dapat memantau pesanan masuk secara real-time, melihat statistik pendapatan harian, serta mengelola status pesanan siswa (Diproses, Siap, Selesai) dalam satu panel kontrol dashboard yang terpusat.
 
 ---
 
-## 🛠️ Tech Stack
+## ✨ List Fitur Utama
 
-- **Framework:** Laravel 11
-- **Styling:** Tailwind CSS (via Vite)
-- **Interactivity:** Alpine.js
+- **Dashboard Ringkasan Penjual:**
+  - Kartu statistik total pesanan dan total pendapatan harian.
+  - Indikator persentase kenaikan/penurunan dibanding hari sebelumnya.
+- **Visualisasi Penjualan (Chart Interaktif):**
+  - Grafik tren penjualan harian berbasis Chart.js.
+  - Filter rentang waktu statistik (Hari Ini, 7 Hari Terakhir, 1 Bulan Terakhir).
+- **Tabel Pesanan Terbaru:**
+  - Monitoring transaksi terbaru yang masuk lengkap dengan detail siswa, kelas, menu, jumlah, status, dan waktu.
+- **Pop-up Modal Daftar Semua Pesanan:**
+  - Pengelolaan seluruh daftar riwayat pesanan harian tanpa perlu berpindah halaman.
+- **Sistem Indicator Badge Status:**
+  - Label visual status pesanan (`Diproses`, `Siap`, `Selesai`) untuk mempermudah alur kerja di kantin.
+- **Desain Modern & Responsif:**
+  - Antarmuka disesuaikan untuk berbagai ukuran layar menggunakan Tailwind CSS.
+
+---
+
+## 🛠️ Tech Stack & Dependencies
+
+- **Framework PHP:** Laravel 11
+- **Styling & Assets:** Tailwind CSS & Vite
 - **Data Visualization:** Chart.js
 - **Database:** MySQL
 
 ---
-
-## ⚙️ Cara Instalasi & Menjalankan Proyek
-
-1. **Clone Repositori**
-   ```bash
-   git clone [https://github.com/username-kamu/nama-repo-semat.git](https://github.com/username-kamu/nama-repo-semat.git)
-   cd nama-repo-semat
