@@ -62,14 +62,6 @@
                     </div>
                 </div>
 
-                <div class="flex items-center justify-between text-xs">
-                    <label class="flex items-center gap-2 text-slate-600 cursor-pointer">
-                        <input type="checkbox" class="rounded border-slate-300 text-[#59142b] focus:ring-[#59142b]">
-                        Ingat Saya
-                    </label>
-                    <a href="#" class="font-bold text-slate-800 hover:underline">Lupa Password?</a>
-                </div>
-
                 <button type="submit"
                     class="w-full bg-[#59142b] text-white font-bold py-3 rounded-xl hover:opacity-90 transition text-xs tracking-wider">
                     MASUK &rarr;

@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -16,27 +19,52 @@ class AuthController extends Controller
         return view('auth.register');
     }
 
+    public function register(Request $request)
+    {
+        // Validasi data input form register
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:6|confirmed', // butuh input name="password_confirmation" di view
+        ]);
+
+        // Simpan user baru ke database dengan password ter-hash
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => 'user', // Default akun sebagai user/siswa
+        ]);
+
+        // Otomatis login-kan user abis register
+        Auth::login($user);
+
+        return redirect()->route('catalog')->with('success', 'Akun berhasil dibuat');
+    }
+
     public function login(Request $request)
     {
-        $email = $request->input('email');
-        $password = $request->input('password');
+        // Validasi input login
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
 
-        // Check Akun User
-        if ($email === 'userkelompok4@gmail.com' && $password === 'achaiuser') {
+        // Cek kecocokan email dan password di database
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+
+            // Cek role, kalau admin arahkan ke dashboard admin, kalau user ke catalog
+            if (Auth::user()->role === 'admin') {
+                return redirect()->route('admin.dashboard');
+            }
+
             return redirect()->route('catalog');
         }
 
-        // Check Akun Admin
-        if ($email === 'adminkelompok4@gmail.com' && $password === 'achaiadmin') {
-            return redirect()->route('admin.dashboard');
-        }
-
-        return back()->withErrors(['login' => 'Email/Username atau Password salah!'])->withInput();
-    }
-
-    public function register(Request $request)
-    {
-        // Simulasi pendaftaran sukses, langsung arahkan ke catalog
-        return redirect()->route('catalog');
+        // Kalau gagal login
+        return back()->withErrors([
+            'email' => 'Email atau password salah',
+        ])->onlyInput('email');
     }
 }

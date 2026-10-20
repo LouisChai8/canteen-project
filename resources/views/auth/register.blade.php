@@ -35,7 +35,7 @@
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-[10px] font-bold text-slate-700 mb-1">Nama lengkap</label>
-                        <input type="text" required placeholder="Nama lengkap"
+                        <input type="text" name="name" value="{{ old('name') }}"required placeholder="Nama lengkap"
                             class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#59142b]">
                     </div>
                     <div>
