@@ -11,22 +11,27 @@ Route::get('/', function () {
 });
 
 // Auth Routes
-Route::get('/login', [AuthController::class, 'loginView'])->name('login');
-Route::post('/login', [AuthController::class, 'loginPost'])->name('login.post');
+Route::middleware(['guest'])->group(function () {
+    Route::get('/login', [AuthController::class, 'loginView'])->name('login');
+    Route::post('/login', [AuthController::class, 'loginPost'])->name('login.post');
+    Route::get('/register', [AuthController::class, 'registerView'])->name('register');
+    Route::post('/register', [AuthController::class, 'registerPost'])->name('register.post');
+});
 
-Route::get('/register', [AuthController::class, 'registerView'])->name('register');
-Route::post('/register', [AuthController::class, 'registerPost'])->name('register.post');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+// User Routes (Hanya bisa diakses jika sudah login dengan role user/admin)
+Route::middleware(['auth', 'role:user,admin'])->group(function () {
+    Route::get('/catalog', function () {
+        return view('user.catalog');
+    })->name('catalog');
 
-// User Routes
-Route::get('/catalog', function () {
-    return view('user.catalog');
-})->name('catalog');
+    Route::get('/my-orders', [OrderController::class, 'index'])->name('orders');
+    Route::get('/checkout', [OrderController::class, 'checkout'])->name('checkout');
+    Route::get('/history', [OrderController::class, 'history'])->name('history');
+});
 
-Route::get('/my-orders', [OrderController::class, 'index'])->name('orders');
-Route::get('/checkout', [OrderController::class, 'checkout'])->name('checkout');
-Route::get('/history', [OrderController::class, 'history'])->name('history');
-
-// Admin Routes
-Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+// Admin Routes (Hanya bisa diakses jika sudah login dan rolenya admin)
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+});
