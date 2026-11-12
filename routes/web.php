@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CatalogController;
+use App\Http\Controllers\CartController;
 
 // Halaman Pertama kali diakses (Redirect ke Login)
 Route::get('/', function () {
@@ -27,9 +29,12 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 
 // User Routes (Hanya bisa diakses jika sudah login dengan role user/admin)
 Route::middleware(['auth', 'role:user,admin'])->group(function () {
-    Route::get('/catalog', function () {
-        return view('user.catalog');
-    })->name('catalog');
+    // Katalog sekarang menggunakan CatalogController
+    Route::get('/catalog', [CatalogController::class, 'index'])->name('catalog');
+
+    // Cart Routes
+    Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+    Route::delete('/cart/{id}', [CartController::class, 'remove'])->name('cart.remove');
 
     Route::get('/my-orders', [OrderController::class, 'index'])->name('orders');
     Route::get('/checkout', [OrderController::class, 'checkout'])->name('checkout');
