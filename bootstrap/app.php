@@ -12,7 +12,16 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->alias([
+            'role' => \App\Http\Middleware\CheckByRole::class,
+        ]);
+
+        // Where logged-in users go when they hit a "guest" route (e.g. /login)
+        $middleware->redirectUsersTo(function (Request $request) {
+            return $request->user()?->role === 'admin'
+                ? route('admin.dashboard')
+                : route('catalog');
+        });
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

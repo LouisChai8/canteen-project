@@ -25,21 +25,19 @@
         </nav>
 
         <div class="flex items-center space-x-4 z-10">
-            <button
-                class="bg-white text-[#59142b] text-xs font-bold px-4 py-2 rounded-xl shadow hover:bg-slate-100 transition">
-                Buat Pesanan
-            </button>
-            <button class="relative p-2 bg-[#4a1024] rounded-full text-white hover:bg-[#3d0d1d] transition">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                </svg>
-            </button>
-
             <div class="w-9 h-9 rounded-full border-2 border-white/80 overflow-hidden shadow-sm">
                 <img src="{{ asset('images/profile2.png') }}" alt="Profile Admin" class="w-full h-full object-cover">
             </div>
+
+            <!-- Tombol Logout Admin -->
+            <form action="{{ route('logout') }}" method="POST" class="inline">
+                @csrf
+                <button type="submit"
+                    class="bg-rose-900/60 hover:bg-rose-900 text-white text-xs font-bold px-3 py-2 rounded-xl transition"
+                    title="Keluar Akun">
+                    Keluar
+                </button>
+            </form>
         </div>
     </header>
 

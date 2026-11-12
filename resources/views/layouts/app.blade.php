@@ -17,7 +17,7 @@
         <!-- Logo SEMAT-->
         <a href="{{ route('catalog') }}" class="text-xl font-bold tracking-wider">SEMAT</a>
 
-        <!-- Nav Katalo, Pesanan saya, Pembayaran, Riwayat -->
+        <!-- Nav Katalog, Pesanan saya, Pembayaran, Riwayat -->
         <nav class="hidden md:flex items-center gap-8 text-sm font-medium absolute left-1/2 -translate-x-1/2">
             <a href="{{ route('catalog') }}" class="hover:text-pink-200 transition">Katalog</a>
             <a href="{{ route('orders') }}" class="hover:text-pink-200 transition">Pesanan Saya</a>
@@ -38,6 +38,16 @@
             <div class="w-8 h-8 rounded-full bg-slate-300 overflow-hidden border border-white/50">
                 <img src="{{ asset('images/Profile.png') }}" alt="Profile" class="w-full h-full object-cover">
             </div>
+
+            <!-- Tombol Logout -->
+            <form action="{{ route('logout') }}" method="POST" class="inline">
+                @csrf
+                <button type="submit"
+                    class="bg-rose-900/60 hover:bg-rose-900 text-white text-xs font-semibold px-3 py-2 rounded-lg transition"
+                    title="Keluar Akun">
+                    Keluar
+                </button>
+            </form>
         </div>
     </header>
 

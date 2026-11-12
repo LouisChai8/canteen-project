@@ -7,6 +7,11 @@ use App\Http\Controllers\AuthController;
 
 // Halaman Pertama kali diakses (Redirect ke Login)
 Route::get('/', function () {
+    if (auth()->check()) {
+        return auth()->user()->role === 'admin'
+            ? redirect()->route('admin.dashboard')
+            : redirect()->route('catalog');
+    }
     return redirect()->route('login');
 });
 
