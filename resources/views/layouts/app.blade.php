@@ -27,14 +27,6 @@
 
         <!-- Profile n Cart -->
         <div class="flex items-center gap-3">
-            <a href="{{ route('checkout') }}"
-                class="bg-white text-[#59142b] hover:bg-slate-100 font-semibold text-xs px-4 py-2 rounded-full shadow transition">
-                Buat Pesanan
-            </a>
-            <a href="{{ route('checkout') }}"
-                class="bg-[#3e0d1d]/60 hover:bg-[#3e0d1d] p-2 rounded-lg text-white transition relative">
-                🛒
-            </a>
             <div class="w-8 h-8 rounded-full bg-slate-300 overflow-hidden border border-white/50">
                 <img src="{{ asset('images/Profile.png') }}" alt="Profile" class="w-full h-full object-cover">
             </div>
