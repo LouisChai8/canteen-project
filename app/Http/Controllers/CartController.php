@@ -2,43 +2,79 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Cart;
+use App\Models\Menu;
+use Illuminate\Http\Request;
 
 class CartController extends Controller
 {
-    // Tambah item ke keranjang
     public function add(Request $request)
     {
-        $request->validate([
-            'menu_id' => 'required|exists:menus,id',
-            'quantity' => 'required|integer|min:1',
+        $data = $request->validate([
+            'menu_id'  => 'required|exists:menus,id',
+            'quantity' => 'required|integer|min:1|max:50',
+            'note'     => 'nullable|string|max:150',
         ]);
 
-        // Cek apakah item yang sama sudah ada di keranjang user
-        $cart = Cart::where('user_id', auth()->id())
-                    ->where('menu_id', $request->menu_id)
-                    ->first();
+        $menu   = Menu::findOrFail($data['menu_id']);
+        $userId = auth()->id();
+        $note   = filled($data['note'] ?? null) ? trim($data['note']) : null;
 
-        if ($cart) {
-            // Jika sudah ada, tambahkan quantity-nya
-            $cart->increment('quantity', $request->quantity);
+        $inCart = (int) Cart::where('user_id', $userId)
+            ->where('menu_id', $menu->id)
+            ->sum('quantity');
+
+        if ($menu->stock < 1) {
+            return $this->respond($request, "{$menu->name} sedang habis.", false, 422);
+        }
+
+        if ($inCart + $data['quantity'] > $menu->stock) {
+            $sisa = max($menu->stock - $inCart, 0);
+
+            return $this->respond(
+                $request,
+                "Stok {$menu->name} tersisa {$menu->stock} (kamu sudah punya {$inCart} di keranjang, bisa tambah {$sisa} lagi).",
+                false,
+                422
+            );
+        }
+
+        // Menu & note sama → gabung qty, note beda → baris terpisah
+        $existing = Cart::where('user_id', $userId)
+            ->where('menu_id', $menu->id)
+            ->where('note', $note)
+            ->first();
+
+        if ($existing) {
+            $existing->increment('quantity', $data['quantity']);
         } else {
-            // Jika belum ada, buat baru
             Cart::create([
-                'user_id' => auth()->id(),
-                'menu_id' => $request->menu_id,
-                'quantity' => $request->quantity,
+                'user_id'  => $userId,
+                'menu_id'  => $menu->id,
+                'quantity' => $data['quantity'],
+                'note'     => $note,
             ]);
         }
 
-        return redirect()->back()->with('success', 'Menu berhasil ditambahkan ke keranjang!');
+        return $this->respond($request, 'Menu berhasil ditambahkan ke keranjang!');
     }
 
-    // Hapus item dari keranjang
-    public function remove($id)
+    public function remove(Request $request, $id)
     {
         Cart::where('id', $id)->where('user_id', auth()->id())->delete();
-        return redirect()->back()->with('success', 'Item keranjang berhasil dihapus!');
+
+        return $this->respond($request, 'Item keranjang berhasil dihapus!');
+    }
+
+    private function respond(Request $request, string $message, bool $ok = true, int $status = 200)
+    {
+        if ($request->expectsJson()) {
+            return response()->json([
+                'message' => $message,
+                'cart'    => Cart::summaryFor(auth()->id()),
+            ], $status);
+        }
+
+        return back()->with($ok ? 'success' : 'error', $message);
     }
 }

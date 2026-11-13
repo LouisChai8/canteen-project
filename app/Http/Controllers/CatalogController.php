@@ -2,20 +2,51 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Menu;
 use App\Models\Cart;
+use App\Models\Menu;
+use Illuminate\Http\Request;
 
 class CatalogController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Ambil semua data menu dari database
-        $menus = Menu::all();
-        
-        // Ambil keranjang milik user yang sedang login beserta relasi menu-nya
-        $cartItems = Cart::with('menu')->where('user_id', auth()->id())->get();
+        $category = $request->query('category');
+        if (! in_array($category, Menu::CATEGORIES, true)) {
+            $category = null;
+        }
 
-        return view('user.catalog', compact('menus', 'cartItems'));
+        $search = trim($request->query('q', ''));
+
+        $menus = Menu::query()
+            ->category($category)
+            ->search($search)
+            ->orderByRaw('stock = 0')
+            ->orderBy('name')
+            ->get();
+
+        $menuData = Menu::all()->mapWithKeys(fn ($m) => [
+            $m->id => [
+                'id'          => $m->id,
+                'name'        => $m->name,
+                'price'       => $m->price,
+                'stock'       => $m->stock,
+                'is_spicy'    => $m->is_spicy,
+                'description' => $m->description,
+                'image'       => $m->image_url,
+            ],
+        ]);
+
+        // Best seller: hanya Ayam Geprek dan Mie Goreng
+        $bestSellers = Menu::whereIn('name', ['Ayam Geprek', 'Mie Goreng'])->get();
+
+        return view('user.catalog', [
+            'menus'       => $menus,
+            'bestSellers' => $bestSellers,
+            'categories'  => Menu::CATEGORIES,
+            'category'    => $category,
+            'search'      => $search,
+            'menuData'    => $menuData,
+            'cartSummary' => Cart::summaryFor(auth()->id()),
+        ]);
     }
 }
