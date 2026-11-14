@@ -32,10 +32,10 @@
             <form action="{{ route('login.post') }}" method="POST" class="space-y-4">
                 @csrf
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Email / Username</label>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Email</label>
                     <div class="relative">
                         <input type="text" name="email" value="{{ old('email') }}" required
-                            placeholder="Masukkan Email atau Username"
+                            placeholder="Masukkan Email"
                             class="w-full pl-10 pr-4 py-3 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#59142b]">
                         <div class="absolute left-3 top-3.5 text-slate-400">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"

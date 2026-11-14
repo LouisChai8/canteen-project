@@ -9,12 +9,10 @@ class Menu extends Model
 {
     public const CATEGORIES = ['Makanan', 'Minuman', 'Cemilan'];
 
-    protected $fillable = ['name', 'category', 'price', 'stock', 'is_spicy', 'description', 'image'];
+    protected $fillable = ['name', 'category', 'price', 'description', 'image'];
 
     protected $casts = [
-        'price'    => 'integer',
-        'stock'    => 'integer',
-        'is_spicy' => 'boolean',
+        'price' => 'integer',
     ];
 
     public function scopeCategory(Builder $query, ?string $category): Builder
@@ -38,10 +36,5 @@ class Menu extends Model
     public function getImageUrlAttribute(): string
     {
         return asset($this->image ?: 'images/placeholder.png');
-    }
-
-    public function getInStockAttribute(): bool
-    {
-        return $this->stock > 0;
     }
 }

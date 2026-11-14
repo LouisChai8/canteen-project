@@ -7,7 +7,7 @@
         <x-alert class="bg-rose-100 border border-rose-300 text-rose-800">{{ session('error') }}</x-alert>
     @endif
 
-    <!-- Header n Search -->
+    <!-- Header & Search -->
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <h2 class="text-2xl font-bold text-[#59142b]">Penjualan Terlaris Hari Ini</h2>
 
@@ -25,13 +25,15 @@
         </form>
     </div>
 
-    <!-- Today's Hottest Seller (client-side tabs, no reload) -->
+    <!-- Hottest Seller Tabs (Filter Best Seller & Redirect Query untuk Katalog Bawah) -->
     <div class="space-y-4">
         <div class="select-none flex items-center gap-2" id="hotTabs">
-            <button type="button" data-filter="all" onclick="filterHot('all', this)" class="hot-tab bg-[#59142b] text-white text-xs px-5 py-2 rounded-lg font-medium">Semua</button>
+            @php($tabBase = 'text-xs px-5 py-2 rounded-lg font-medium transition text-white')
+            <a href="{{ route('catalog', array_filter(['q' => $search])) }}"
+                class="{{ !$category ? 'bg-[#59142b]' : 'bg-[#ba798c] hover:bg-[#a66275]' }} {{ $tabBase }}">Semua</a>
             @foreach ($categories as $cat)
-                <button type="button" data-filter="{{ $cat }}" onclick="filterHot('{{ $cat }}', this)"
-                    class="hot-tab bg-[#ba798c] hover:bg-[#a66275] text-white text-xs px-5 py-2 rounded-lg font-medium transition">{{ $cat }}</button>
+                <a href="{{ route('catalog', array_filter(['category' => $cat, 'q' => $search])) }}"
+                    class="{{ $category === $cat ? 'bg-[#59142b]' : 'bg-[#ba798c] hover:bg-[#a66275]' }} {{ $tabBase }}">{{ $cat }}</a>
             @endforeach
         </div>
 
@@ -58,30 +60,23 @@
         </button>
     </div>
 
-    <!-- Main Catalog (server-side filter + search) -->
+    <!-- Main Catalog (Tampil otomatis ter-filter berdasarkan pilihan kategori di atas) -->
     <div class="space-y-4">
         <h2 class="text-2xl font-bold text-[#59142b]">
             Menu Katalog
+            @if ($category)
+                <span class="text-sm font-medium text-slate-500">— Kategori "{{ $category }}"</span>
+            @endif
             @if ($search)
                 <span class="text-sm font-medium text-slate-500">— hasil untuk "{{ $search }}"</span>
             @endif
         </h2>
 
-        <div class="flex items-center gap-2">
-            @php($tabBase = 'text-xs px-5 py-2 rounded-lg font-medium transition text-white')
-            <a href="{{ route('catalog', array_filter(['q' => $search])) }}"
-                class="{{ $tabBase }} {{ !$category ? 'bg-[#59142b]' : 'bg-[#ba798c] hover:bg-[#a66275]' }}">Semua</a>
-            @foreach ($categories as $cat)
-                <a href="{{ route('catalog', array_filter(['category' => $cat, 'q' => $search])) }}"
-                    class="{{ $tabBase }} {{ $category === $cat ? 'bg-[#59142b]' : 'bg-[#ba798c] hover:bg-[#a66275]' }}">{{ $cat }}</a>
-            @endforeach
-        </div>
-
         @if ($menus->isEmpty())
             <div class="bg-white border border-slate-200 rounded-3xl p-10 text-center text-xs text-slate-500 space-y-2">
                 <p class="font-bold text-slate-800 text-sm">Menu tidak ditemukan</p>
                 <p>Coba kata kunci lain atau pilih kategori yang berbeda.</p>
-                <a href="{{ route('catalog') }}" class="inline-block mt-2 text-[#59142b] font-bold hover:underline">Reset filter</a>
+                <a href="{{ route('catalog') }}" class="inline-block mt-2 text-[#59142b] font-bold hover:underline">Reset pencarian</a>
             </div>
         @else
             <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
@@ -93,7 +88,7 @@
     </div>
 </div>
 
-<!-- Pop-up Modal Detail Makanan -->
+<!-- Modal Detail Makanan -->
 <div id="detailModal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
     <div class="bg-white w-full max-w-sm rounded-3xl p-5 shadow-xl relative my-auto max-h-[90vh] overflow-y-auto">
         <button onclick="closeDetailModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 z-10">
@@ -108,7 +103,6 @@
 
         <h3 id="modalTitle" class="font-bold text-lg text-slate-900 tracking-tight"></h3>
         <p id="modalDesc" class="text-xs text-slate-500 mt-1 leading-relaxed"></p>
-        <p id="modalStock" class="text-[11px] font-semibold text-amber-600 mt-1"></p>
 
         <div id="levelContainer" class="mt-4 pt-3 border-t border-slate-100 hidden">
             <label class="block text-xs font-bold text-slate-800 mb-2">Pilih Level Pedas</label>
@@ -127,25 +121,25 @@
                 <span id="modalPrice" class="text-sm font-extrabold text-[#59142b]"></span>
             </div>
             <div class="flex items-center gap-3 bg-slate-100 px-3 py-1.5 rounded-full">
-                <button onclick="changeQty(-1)" class="w-6 h-6 rounded-full bg-white text-slate-700 font-bold text-xs shadow-sm flex items-center justify-center hover:bg-slate-200">-</button>
+                <button type="button" onclick="changeQty(-1)" class="w-6 h-6 rounded-full bg-white text-slate-700 font-bold text-xs shadow-sm flex items-center justify-center hover:bg-slate-200">-</button>
                 <span id="modalQty" class="text-xs font-bold text-slate-800">1</span>
-                <button onclick="changeQty(1)" class="w-6 h-6 rounded-full bg-[#59142b] text-white font-bold text-xs shadow-sm flex items-center justify-center hover:opacity-90">+</button>
+                <button type="button" onclick="changeQty(1)" class="w-6 h-6 rounded-full bg-[#59142b] text-white font-bold text-xs shadow-sm flex items-center justify-center hover:opacity-90">+</button>
             </div>
         </div>
 
-        <button id="modalAddBtn" onclick="addToCart()" class="w-full mt-4 bg-[#59142b] text-white text-xs font-bold py-3 rounded-2xl hover:opacity-90 transition shadow-md disabled:opacity-50">
+        <button id="modalAddBtn" onclick="addToCart()" class="w-full mt-4 bg-[#59142b] text-white text-xs font-bold py-3 rounded-2xl hover:opacity-90 transition shadow-md">
             Tambah Ke Keranjang
         </button>
     </div>
 </div>
 
-<!-- Toast -->
+<!-- Toast Notification -->
 <div id="toast" class="fixed top-20 left-1/2 -translate-x-1/2 z-[60] hidden text-xs font-semibold px-4 py-2.5 rounded-xl shadow-lg max-w-sm text-center"></div>
 
-<!-- Cart backdrop -->
+<!-- Cart Backdrop -->
 <div id="cartBackdrop" onclick="closeCartDrawer()" class="fixed inset-0 bg-black/40 backdrop-blur-xs z-30 hidden transition-opacity duration-300"></div>
 
-<!-- Floating cart drawer -->
+<!-- Floating Cart Drawer -->
 <div id="floatingCart" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-lg bg-[#59142b] text-white rounded-t-3xl shadow-2xl z-40 hidden transition-all duration-300 overflow-hidden">
     <div onclick="toggleCartDrawer()" class="p-4 cursor-pointer flex items-center justify-between select-none border-b border-white/10">
         <div class="flex items-center gap-3">
@@ -180,6 +174,7 @@
     </div>
 </div>
 
+<!-- Script Sederhana dan Natural -->
 <script>
     const MENUS = @json($menuData);
     const ADD_URL = @json(route('cart.add'));
@@ -187,189 +182,259 @@
     const CSRF = @json(csrf_token());
 
     let cart = @json($cartSummary);
-    let current = null;
+    let currentMenu = null;
     let currentQty = 1;
     let selectedLevel = 1;
     let isDrawerOpen = false;
-    let busy = false;
 
-    const rp = n => 'RP ' + Number(n).toLocaleString('id-ID');
-    const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-
-    /* ---------- helpers ---------- */
-    function inCartQty(menuId) {
-        return cart.items.filter(i => i.menu_id === menuId).reduce((s, i) => s + i.qty, 0);
-    }
-    function remainingStock(menu) {
-        return Math.max(menu.stock - inCartQty(menu.id), 0);
-    }
-    function toast(msg, ok = true) {
-        const el = document.getElementById('toast');
-        el.textContent = msg;
-        el.className = 'fixed top-20 left-1/2 -translate-x-1/2 z-[60] text-xs font-semibold px-4 py-2.5 rounded-xl shadow-lg max-w-sm text-center '
-            + (ok ? 'bg-emerald-600 text-white' : 'bg-rose-600 text-white');
-        clearTimeout(el._t);
-        el._t = setTimeout(() => el.classList.add('hidden'), 2800);
-    }
-    async function api(url, method, body) {
-        const res = await fetch(url, {
-            method,
-            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': CSRF },
-            body: body ? JSON.stringify(body) : undefined,
-        });
-        const data = await res.json().catch(() => ({}));
-        if (data.cart) { cart = data.cart; updateFloatingCart(); }
-        if (!res.ok) throw new Error(data.message || Object.values(data.errors || {})[0]?.[0] || 'Terjadi kesalahan.');
-        return data;
+    // Format Rupiah
+    function formatRupiah(angka) {
+        return 'RP ' + Number(angka).toLocaleString('id-ID');
     }
 
-    /* ---------- hottest tabs (client-side) ---------- */
-    function filterHot(cat, btn) {
-        document.querySelectorAll('.hot-tab').forEach(b => b.className = 'hot-tab bg-[#ba798c] hover:bg-[#a66275] text-white text-xs px-5 py-2 rounded-lg font-medium transition');
-        btn.className = 'hot-tab bg-[#59142b] text-white text-xs px-5 py-2 rounded-lg font-medium';
-        document.querySelectorAll('#hotGrid > div').forEach(c => {
-            c.classList.toggle('hidden', cat !== 'all' && c.dataset.category !== cat);
-        });
+    // Tampilkan Toast Notifikasi
+    function showToast(message, isSuccess = true) {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.className = 'fixed top-20 left-1/2 -translate-x-1/2 z-[60] text-xs font-semibold px-4 py-2.5 rounded-xl shadow-lg max-w-sm text-center ' +
+            (isSuccess ? 'bg-emerald-600 text-white' : 'bg-rose-600 text-white');
+        
+        toast.classList.remove('hidden');
+        clearTimeout(toast.timeout);
+        toast.timeout = setTimeout(() => {
+            toast.classList.add('hidden');
+        }, 2500);
     }
 
-    /* ---------- modal ---------- */
+    // Helper untuk request API Keranjang
+    async function sendRequest(url, method, data = null) {
+        try {
+            const response = await fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': CSRF
+                },
+                body: data ? JSON.stringify(data) : null
+            });
+
+            const result = await response.json();
+            if (result.cart) {
+                cart = result.cart;
+                updateFloatingCart();
+            }
+
+            if (!response.ok) {
+                throw new Error(result.message || 'Terjadi kesalahan pada sistem.');
+            }
+
+            return result;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    // Modal Detail Makanan
     function openDetailModal(id) {
         const menu = MENUS[id];
         if (!menu) return;
-        const left = remainingStock(menu);
-        if (left < 1) { toast(`Stok ${menu.name} sudah habis / semua ada di keranjangmu.`, false); return; }
 
-        current = menu; currentQty = 1; selectedLevel = 1;
+        currentMenu = menu;
+        currentQty = 1;
+        selectedLevel = 1;
 
-        modalTitle.innerText = menu.name;
-        modalPrice.innerText = rp(menu.price);
-        modalImg.src = menu.image;
-        modalDesc.innerText = menu.description || '';
-        modalQty.innerText = 1;
-        itemNotes.value = '';
-        modalStock.innerText = left <= 5 ? `Sisa ${left} porsi` : '';
+        document.getElementById('modalTitle').textContent = menu.name;
+        document.getElementById('modalPrice').textContent = formatRupiah(menu.price);
+        document.getElementById('modalImg').src = menu.image;
+        document.getElementById('modalDesc').textContent = menu.description || '';
+        document.getElementById('modalQty').textContent = currentQty;
+        document.getElementById('itemNotes').value = '';
 
-        if (menu.is_spicy) {
+        // Cek jika menu makanan pedas (ayam geprek / mie goreng)
+        const levelContainer = document.getElementById('levelContainer');
+        const isSpicy = ['ayam geprek', 'mie goreng'].some(name => menu.name.toLowerCase().includes(name));
+
+        if (isSpicy) {
             levelContainer.classList.remove('hidden');
-            levelOptions.innerHTML = [1,2,3,4,5].map(i => `
-                <button type="button" onclick="selectLevel(${i}, this)"
-                    class="level-btn border rounded-xl py-2 text-xs font-bold transition flex flex-col items-center justify-center ${i === 1
-                        ? 'bg-[#59142b] text-white border-[#59142b]'
-                        : 'bg-slate-50 text-slate-700 border-slate-200 hover:border-[#59142b]'}">
-                    <span>Lvl ${i}</span>
-                </button>`).join('');
+            const levelOptions = document.getElementById('levelOptions');
+            levelOptions.innerHTML = '';
+
+            for (let i = 1; i <= 5; i++) {
+                const activeClass = i === 1 
+                    ? 'bg-[#59142b] text-white border-[#59142b]' 
+                    : 'bg-slate-50 text-slate-700 border-slate-200 hover:border-[#59142b]';
+
+                levelOptions.innerHTML += `
+                    <button type="button" onclick="selectLevel(${i}, this)" 
+                        class="level-btn border rounded-xl py-2 text-xs font-bold transition flex flex-col items-center justify-center ${activeClass}">
+                        <span>Lvl ${i}</span>
+                    </button>
+                `;
+            }
         } else {
             levelContainer.classList.add('hidden');
         }
-        detailModal.classList.remove('hidden');
-    }
-    function closeDetailModal() { detailModal.classList.add('hidden'); }
 
-    function selectLevel(lvl, el) {
-        selectedLevel = lvl;
-        document.querySelectorAll('.level-btn').forEach(b =>
-            b.className = 'level-btn border rounded-xl py-2 text-xs font-bold transition flex flex-col items-center justify-center bg-slate-50 text-slate-700 border-slate-200 hover:border-[#59142b]');
-        el.className = 'level-btn border rounded-xl py-2 text-xs font-bold transition flex flex-col items-center justify-center bg-[#59142b] text-white border-[#59142b]';
+        document.getElementById('detailModal').classList.remove('hidden');
     }
 
-    function changeQty(delta) {
-        const max = remainingStock(current);
-        const next = currentQty + delta;
-        if (next < 1) return;
-        if (next > max) { toast(`Maksimal ${max} porsi untuk ${current.name}.`, false); return; }
-        currentQty = next;
-        modalQty.innerText = currentQty;
+    function closeDetailModal() {
+        document.getElementById('detailModal').classList.add('hidden');
     }
 
-    /* ---------- add to cart ---------- */
-    async function submitAdd(menu, qty, note) {
-        if (busy) return false;
-        busy = true;
-        try {
-            const data = await api(ADD_URL, 'POST', { menu_id: menu.id, quantity: qty, note });
-            toast(data.message);
-            return true;
-        } catch (e) {
-            toast(e.message, false);
-            return false;
-        } finally { busy = false; }
+    function selectLevel(level, element) {
+        selectedLevel = level;
+        document.querySelectorAll('.level-btn').forEach(btn => {
+            btn.className = 'level-btn border rounded-xl py-2 text-xs font-bold transition flex flex-col items-center justify-center bg-slate-50 text-slate-700 border-slate-200 hover:border-[#59142b]';
+        });
+        element.className = 'level-btn border rounded-xl py-2 text-xs font-bold transition flex flex-col items-center justify-center bg-[#59142b] text-white border-[#59142b]';
     }
 
+    function changeQty(amount) {
+        currentQty += amount;
+        if (currentQty < 1) currentQty = 1;
+        document.getElementById('modalQty').textContent = currentQty;
+    }
+
+    // Tambah ke keranjang dari modal
     async function addToCart() {
-        const parts = [];
-        if (current.is_spicy) parts.push(`Level Pedas ${selectedLevel}`);
-        const notes = itemNotes.value.trim();
-        if (notes) parts.push(notes);
+        let noteParts = [];
+        const isSpicy = ['ayam geprek', 'mie goreng'].some(name => currentMenu.name.toLowerCase().includes(name));
+        
+        if (isSpicy) {
+            noteParts.push(`Level Pedas ${selectedLevel}`);
+        }
 
-        modalAddBtn.disabled = true;
-        const ok = await submitAdd(current, currentQty, parts.join(' • ') || null);
-        modalAddBtn.disabled = false;
-        if (ok) closeDetailModal();
-    }
+        const notesInput = document.getElementById('itemNotes').value.trim();
+        if (notesInput) {
+            noteParts.push(notesInput);
+        }
 
-    function quickAdd(id) {
-        const menu = MENUS[id];
-        if (!menu) return;
-        // Spicy items need a level choice, so open the modal instead
-        if (menu.is_spicy) return openDetailModal(id);
-        if (remainingStock(menu) < 1) return toast(`Stok ${menu.name} sudah habis / semua ada di keranjangmu.`, false);
-        submitAdd(menu, 1, null);
-    }
+        const finalNote = noteParts.length > 0 ? noteParts.join(' • ') : null;
+        const addBtn = document.getElementById('modalAddBtn');
+        addBtn.disabled = true;
 
-    async function removeCartItem(id) {
         try {
-            await api(REMOVE_URL.replace(':id', id), 'DELETE');
-            if (cart.items.length === 0) closeCartDrawer();
-        } catch (e) { toast(e.message, false); }
-    }
+            const response = await sendRequest(ADD_URL, 'POST', {
+                menu_id: currentMenu.id,
+                quantity: currentQty,
+                note: finalNote
+            });
 
-    /* ---------- floating cart ---------- */
-    function updateFloatingCart() {
-        const box = document.getElementById('floatingCart');
-        if (cart.count > 0) {
-            floatingItemCount.innerText = cart.count;
-            floatingItemText.innerText = cart.count + ' Item terpilih';
-            floatingTotalPrice.innerText = rp(cart.total);
-            box.classList.remove('hidden');
-            renderCartList();
-        } else {
-            box.classList.add('hidden');
+            showToast(response.message || 'Berhasil ditambahkan ke keranjang!');
+            closeDetailModal();
+        } catch (error) {
+            showToast(error.message, false);
+        } finally {
+            addBtn.disabled = false;
         }
     }
 
+    // Tombol plus kecil langsung di kartu menu
+    async function quickAdd(id) {
+        const menu = MENUS[id];
+        if (!menu) return;
+
+        const isSpicy = ['ayam geprek', 'mie goreng'].some(name => menu.name.toLowerCase().includes(name));
+        if (isSpicy) {
+            return openDetailModal(id);
+        }
+
+        try {
+            const response = await sendRequest(ADD_URL, 'POST', {
+                menu_id: menu.id,
+                quantity: 1,
+                note: null
+            });
+
+            showToast(response.message || 'Berhasil ditambahkan ke keranjang!');
+        } catch (error) {
+            showToast(error.message, false);
+        }
+    }
+
+    // Hapus item dari keranjang
+    async function removeCartItem(itemId) {
+        try {
+            const url = REMOVE_URL.replace(':id', itemId);
+            await sendRequest(url, 'DELETE');
+
+            if (cart.items.length === 0) {
+                closeCartDrawer();
+            }
+        } catch (error) {
+            showToast(error.message, false);
+        }
+    }
+
+    // Update tampilan floating cart di bawah
+    function updateFloatingCart() {
+        const floatingCart = document.getElementById('floatingCart');
+        
+        if (cart.count > 0) {
+            document.getElementById('floatingItemCount').textContent = cart.count;
+            document.getElementById('floatingItemText').textContent = cart.count + ' Item terpilih';
+            document.getElementById('floatingTotalPrice').textContent = formatRupiah(cart.total);
+            floatingCart.classList.remove('hidden');
+            renderCartList();
+        } else {
+            floatingCart.classList.add('hidden');
+        }
+    }
+
+    // Render daftar item di drawer keranjang
     function renderCartList() {
-        cartItemsList.innerHTML = cart.items.map(item => `
-            <div class="bg-white/10 p-3 rounded-2xl flex items-start justify-between gap-3 text-xs">
-                <div class="space-y-1">
-                    <p class="font-bold text-white">${esc(item.name)} <span class="text-amber-300">x${item.qty}</span></p>
-                    ${item.note ? `<p class="text-[11px] text-slate-300 italic">${esc(item.note)}</p>` : ''}
-                    <p class="font-extrabold text-white/90 pt-1">${rp(item.subtotal)}</p>
+        const container = document.getElementById('cartItemsList');
+        container.innerHTML = '';
+
+        cart.items.forEach(item => {
+            container.innerHTML += `
+                <div class="bg-white/10 p-3 rounded-2xl flex items-start justify-between gap-3 text-xs">
+                    <div class="space-y-1">
+                        <p class="font-bold text-white">${item.name} <span class="text-amber-300">x${item.qty}</span></p>
+                        ${item.note ? `<p class="text-[11px] text-slate-300 italic">${item.note}</p>` : ''}
+                        <p class="font-extrabold text-white/90 pt-1">${formatRupiah(item.subtotal)}</p>
+                    </div>
+                    <button onclick="removeCartItem(${item.id})" class="text-rose-300 hover:text-rose-100 p-1" title="Hapus">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                        </svg>
+                    </button>
                 </div>
-                <button onclick="removeCartItem(${item.id})" class="text-rose-300 hover:text-rose-100 p-1" title="Hapus">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-                    </svg>
-                </button>
-            </div>`).join('');
+            `;
+        });
+    }
+
+    // Buka/Tutup Drawer Keranjang
+    function toggleCartDrawer() {
+        if (cart.items.length === 0) {
+            closeCartDrawer();
+            return;
+        }
+
+        isDrawerOpen = !isDrawerOpen;
+        const drawerContent = document.getElementById('cartDrawerContent');
+        const cartArrowIcon = document.getElementById('cartArrowIcon');
+        const backdrop = document.getElementById('cartBackdrop');
+
+        if (isDrawerOpen) {
+            drawerContent.classList.remove('hidden');
+            cartArrowIcon.classList.add('rotate-180');
+            backdrop.classList.remove('hidden');
+        } else {
+            closeCartDrawer();
+        }
     }
 
     function closeCartDrawer() {
         isDrawerOpen = false;
-        cartDrawerContent.classList.add('hidden');
-        cartArrowIcon.classList.remove('rotate-180');
-        cartBackdrop.classList.add('hidden');
+        document.getElementById('cartDrawerContent').classList.add('hidden');
+        document.getElementById('cartArrowIcon').classList.remove('rotate-180');
+        document.getElementById('cartBackdrop').classList.add('hidden');
     }
 
-    function toggleCartDrawer() {
-        if (cart.items.length === 0) return closeCartDrawer();
-        isDrawerOpen = !isDrawerOpen;
-        if (isDrawerOpen) {
-            cartDrawerContent.classList.remove('hidden');
-            cartArrowIcon.classList.add('rotate-180');
-            cartBackdrop.classList.remove('hidden');
-        } else closeCartDrawer();
-    }
-
-    updateFloatingCart(); // render persisted cart on page load
+    // Inisialisasi floating cart saat halaman pertama kali dimuat
+    updateFloatingCart();
 </script>
 @endsection

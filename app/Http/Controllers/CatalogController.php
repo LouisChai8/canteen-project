@@ -20,7 +20,6 @@ class CatalogController extends Controller
         $menus = Menu::query()
             ->category($category)
             ->search($search)
-            ->orderByRaw('stock = 0')
             ->orderBy('name')
             ->get();
 
@@ -29,15 +28,13 @@ class CatalogController extends Controller
                 'id'          => $m->id,
                 'name'        => $m->name,
                 'price'       => $m->price,
-                'stock'       => $m->stock,
-                'is_spicy'    => $m->is_spicy,
                 'description' => $m->description,
                 'image'       => $m->image_url,
             ],
         ]);
 
-        // Best seller: hanya Ayam Geprek dan Mie Goreng
-        $bestSellers = Menu::whereIn('name', ['Ayam Geprek', 'Mie Goreng'])->get();
+        // Best seller: Nasi Ayam Geprek, Es Matcha Latte, dan Kentang Goreng
+        $bestSellers = Menu::whereIn('name', ['Nasi Ayam Geprek', 'Es Matcha Latte', 'Kentang Goreng'])->get();
 
         return view('user.catalog', [
             'menus'       => $menus,
